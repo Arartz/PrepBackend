@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import nodemailer from 'nodemailer'
+import 'dotenv/config'
 
 
 const PORT = 4000
@@ -33,11 +34,11 @@ app.listen(PORT, () => {
 })
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'preprush'
-})
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
+});
 
 db.connect((err) => {
     if(err) return console.log(err)
