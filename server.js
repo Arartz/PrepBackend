@@ -3,8 +3,6 @@ import mysql from 'mysql'
 import cors from 'cors'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
-import nodemailer from 'nodemailer'
 import 'dotenv/config'
 
 
@@ -33,12 +31,16 @@ app.listen(PORT, () => {
     console.log('Server Running At port: ', PORT)
 })
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
+
 
 db.connect((err) => {
     if(err) return console.log(err)
