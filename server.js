@@ -31,20 +31,15 @@ app.listen(PORT, () => {
     console.log('Server Running At port: ', PORT)
 })
 
-const pool = mysql.createPool({
+const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
 });
 
-const db = pool;
 
-
-db.getConnection((err) => {
+db.connect((err) => {
     if(err) return console.log(err)
     return console.log('database connected')
     connection.release();
