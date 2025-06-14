@@ -112,7 +112,7 @@ app.get('/get/lessons/:id', (req, res) => {
 app.get('/get/questions/:id', (req, res) => {
     const sql = `
         SELECT q.*, GROUP_CONCAT(
-            JSON_OBJECT(
+            CONCAT(
                 'id', o.id,
                 'content', o.content,
                 'is_correct', o.is_correct
@@ -401,7 +401,7 @@ app.get('/get/next-questions/:lessonId', (req, res) => {
         // Get questions that were not answered correctly before
         const questionsSql = `
             SELECT q.*, GROUP_CONCAT(
-                JSON_OBJECT(
+                CONCAT(
                     'id', o.id,
                     'content', o.content,
                     'is_correct', o.is_correct
@@ -446,7 +446,7 @@ app.get('/get/next-questions/:lessonId', (req, res) => {
                 
                 const additionalQuestionsSql = `
                     SELECT q.*, GROUP_CONCAT(
-                        JSON_OBJECT(
+                        CONCAT(
                             'id', o.id,
                             'content', o.content,
                             'is_correct', o.is_correct
