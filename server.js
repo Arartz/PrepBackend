@@ -41,10 +41,13 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+const db = pool;
 
-db.connect((err) => {
+
+db.getConnection((err) => {
     if(err) return console.log(err)
     return console.log('database connected')
+    connection.release();
 })
 
 // Authentication routes
