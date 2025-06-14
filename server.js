@@ -113,10 +113,10 @@ app.get('/get/questions/:id', (req, res) => {
     const sql = `
         SELECT q.*, GROUP_CONCAT(
             CONCAT(
-                'id', o.id,
-                'content', o.content,
-                'is_correct', o.is_correct
-            )
+                '{"id":"', o.id,
+                '","content":"', REPLACE(o.content, '"', '\\"'),
+                '","is_correct":"', o.is_correct, '"}'
+            ) SEPARATOR ','
         ) as options
         FROM questions q
         LEFT JOIN options o ON q.id = o.question_id
@@ -124,14 +124,32 @@ app.get('/get/questions/:id', (req, res) => {
         GROUP BY q.id
         ORDER BY q.difficulty_level
     `
+    
     db.query(sql, [req.params.id], (err, data) => {
-        if(err) return res.send(err)
-        // Parse the options string into an array of objects
-        const questions = data.map(q => ({
-            ...q,
-            options: JSON.parse(`[${q.options}]`)
-        }))
-        return res.json(questions)
+        if(err) return res.status(500).json({ error: 'Database error' })
+        
+        try {
+            const questions = data.map(q => {
+                let options = [];
+                if (q.options) {
+                    try {
+                        // Safely parse the JSON array
+                        options = JSON.parse(`[${q.options}]`);
+                    } catch (parseError) {
+                        console.error('Failed to parse options:', q.options);
+                        options = [];
+                    }
+                }
+                return {
+                    ...q,
+                    options: options
+                };
+            });
+            return res.json(questions);
+        } catch (error) {
+            console.error('Error processing questions:', error);
+            return res.status(500).json({ error: 'Error processing questions' });
+        }
     })
 })
 
