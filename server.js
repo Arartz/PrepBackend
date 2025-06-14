@@ -144,7 +144,7 @@ app.get('/get/option/:qid', (req, res) => {
 })
 
 // Progress Tracking
-app.get('/get/overall-progress', authenticateToken, (req, res) => {
+app.get('/get/overall-progress', (req, res) => {
     const userId = req.user.id
     const sql = `
         SELECT 
@@ -158,7 +158,7 @@ app.get('/get/overall-progress', authenticateToken, (req, res) => {
     })
 })
 
-app.get('/get/module-progress', authenticateToken, (req, res) => {
+app.get('/get/module-progress', (req, res) => {
     const userId = req.user.id
     const sql = `
         SELECT 
@@ -180,7 +180,7 @@ app.get('/get/module-progress', authenticateToken, (req, res) => {
     })
 })
 
-app.post('/save/progress', authenticateToken, async (req, res) => {
+app.post('/save/progress', async (req, res) => {
     try {
         const { lessonId, score, totalQuestions, grade } = req.body
         const userId = req.user.id
@@ -369,7 +369,7 @@ app.post('/save/progress', authenticateToken, async (req, res) => {
 })
 
 // Get questions excluding previously correct answers
-app.get('/get/next-questions/:lessonId', authenticateToken, (req, res) => {
+app.get('/get/next-questions/:lessonId', (req, res) => {
     const { lessonId } = req.params
     const userId = req.user.id
 
@@ -492,7 +492,7 @@ app.get('/get/next-questions/:lessonId', authenticateToken, (req, res) => {
 })
 
 // Get user's progress
-app.get('/get/progress', authenticateToken, (req, res) => {
+app.get('/get/progress', (req, res) => {
     const userId = req.user.id
     const query = `
         SELECT 
