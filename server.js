@@ -31,19 +31,23 @@ app.listen(PORT, () => {
     console.log('Server Running At port: ', PORT)
 })
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
+pool.getConnection((err, connection) => {
+  if (err) return console.log('❌ DB Pool Error:', err);
+  console.log('✅ Connected to DB (via pool)');
+  connection.release(); // now this is valid
+});
 
-db.connect((err) => {
-    if(err) return console.log(err)
-    return console.log('database connected')
-    connection.release();
-})
+const db = pool;
 
 // Authentication routes
 app.post('/register', async (req, res) => {
